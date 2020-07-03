@@ -8,13 +8,50 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+// MARK: - Declaration
 
+final class ViewController: UIViewController {
+
+    // MARK: Outlets
+    
+    @IBOutlet private weak var titleLabel: UILabel! {
+        didSet {
+            titleLabel.text = title
+        }
+    }
+    
+    @IBOutlet private weak var countLabel: UILabel!
+    
+    // MARK: Dependencies
+    
+    private let counter: Counter = .shared
+    
+    // MARK: Life cycle
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        countLabel.text = "\(counter.count)"
+        counter.multicastDelegate.add(self)
     }
+    
+}
 
+// MARK: - Actions
+
+extension ViewController {
+    
+    @IBAction private func addOneAction(_ sender: UIButton) {
+        counter.increment()
+    }
 
 }
 
+// MARK: - Counter Delegate
+
+extension ViewController: CounterDelegate {
+    
+    func counterDidUpdate(_ counter: Counter, to newValue: Int) {
+        countLabel.text = "\(newValue)"
+    }
+    
+}
