@@ -23,13 +23,13 @@ final class Counter {
     
     // MARK: Multicast delegate
     
-    let multicastDelegate: MulticastDelegate<CounterDelegate> = .init()
+    @Multicast var delegate: CounterDelegate
     
     // MARK: Properties
     
     private(set) var count: Int = 0 {
         didSet {
-            multicastDelegate.invoke { $0.counterDidUpdate(self, to: count) }
+            $delegate.invoke { $0.counterDidUpdate(self, to: count) }
         }
     }
     
